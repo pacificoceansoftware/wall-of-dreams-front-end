@@ -8,7 +8,7 @@ export function GetDreamsAction() {
     });
 
     axios
-      .get("http://localhost:5000/dream")
+      .get("https://wall-of-dreams-back-end.herokuapp.com/api/dream")
       .then(({ data }) => {
         const result = data.map((element: any) => element.dream);
         dispatch({
@@ -36,7 +36,7 @@ export function SaveDreamAction(dream: string) {
     };
 
     axios
-      .post("http://localhost:5000/dream/add", newDream)
+      .post("https://wall-of-dreams-back-end.herokuapp.com/api/dream/add", newDream)
       .then(() => {
         dispatch({
           type: TYPE.DREAM_ADDED,

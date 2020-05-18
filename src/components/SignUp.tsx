@@ -12,6 +12,9 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { connect, ConnectedProps } from 'react-redux';
+import { bindActionCreators } from 'redux';
+import {SaveUserAction} from "../store/user/action";
 
 function Copyright() {
   return (
@@ -46,17 +49,31 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignUp() {
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators(
+    {SaveUserAction},
+    dispatch,
+  )
+}
+
+const connector = connect(null, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux;
+
+function SignUp(props: Props) {
   const classes = useStyles();
   let clientInfo = {
     firstName: "",
     lastName: "",
     emailAddress: "",
-    passWord: "",
+    password: "",
   }
 
-  const signUpButtonClick = (event: any) => {
-    console.log(clientInfo);
+  const submitUser = (event: any) => {
+    props.SaveUserAction(clientInfo.firstName, clientInfo.lastName, clientInfo.emailAddress, clientInfo.password);
   }
   
   const firstNameOnChange = (event: any) => {
@@ -72,7 +89,7 @@ export default function SignUp() {
   }
 
   const passWordOnChange = (event: any) => {
-    clientInfo.passWord = event.target.value;
+    clientInfo.password = event.target.value;
   }
 
   return (
@@ -153,7 +170,7 @@ export default function SignUp() {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick = {signUpButtonClick}
+            onClick = {submitUser}
           >
             Sign Up
           </Button>
@@ -172,3 +189,5 @@ export default function SignUp() {
     </Container>
   );
 }
+
+export default connector(SignUp);

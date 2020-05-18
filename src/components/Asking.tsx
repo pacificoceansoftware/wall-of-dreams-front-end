@@ -12,6 +12,7 @@ const useStyles = makeStyles((theme: Theme) =>
       marginLeft: "500px",
       marginTop: "200px",
       position: "relative",
+      background: "azure",
     }
   }),
 );
