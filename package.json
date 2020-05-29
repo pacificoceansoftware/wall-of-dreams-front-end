@@ -2,11 +2,10 @@
   "name": "wall-of-dreams",
   "version": "1.0.0",
   "description": "",
-  "homepage": "http://wallofdeams.com/",
+  "homepage": "https://wall-of-dreams-back-end.herokuapp.com/",
   "scripts": {
-    "watch:build": "npx webpack -w",
-    "start": "react-scripts start",
-    "build": "react-scripts build"
+    "dev": "webpack --env.API_URL=http://localhost:5000 --config webpack.config.js",
+    "start": "webpack --env.API_URL=https://wall-of-dreams-back-end.herokuapp.com --config webpack.config.js"
   },
   "keywords": [],
   "author": "",
@@ -30,6 +29,7 @@
     "bootstrap": "^4.4.1",
     "css-loader": "^3.5.3",
     "csstype": "^2.6.10",
+    "dotenv": "^8.2.0",
     "history": "^4.10.1",
     "html-webpack-plugin": "^4.2.0",
     "material-ui": "^0.20.2",

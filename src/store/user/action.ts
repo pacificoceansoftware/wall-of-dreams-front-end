@@ -15,7 +15,7 @@ export function GetUserAction(emailAddress: string, password: string) {
     };
 
     axios
-      .post("http://localhost:5000/api/user/search", user)
+      .post(process.env.API_URL + "/api/user/search", user)
       .then(({ data }) => {
         if (!data || !data.length) {
           dispatch({
@@ -61,7 +61,7 @@ export function SaveUserAction(
     };
 
     axios
-      .post("http://localhost:5000/api/user/add", newUser)
+      .post(process.env.API_URL + "/api/user/add", newUser)
       .then(({ data }) => {
         dispatch({
           type: TYPE.SAVED_USER,

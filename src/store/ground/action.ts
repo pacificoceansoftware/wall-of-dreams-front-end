@@ -6,9 +6,8 @@ export function GetDreamsAction() {
     dispatch({
       type: TYPE.DREAM_REQUESTED,
     });
-
     axios
-      .get("http://localhost:5000/api/user/dreams")
+      .get( process.env.API_URL + "/api/user/dreams")
       .then(({ data }) => {
         const result = data.map((element: any) => element.dreams);
         dispatch({
