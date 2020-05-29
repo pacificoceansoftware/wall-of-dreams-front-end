@@ -1,0 +1,14 @@
+.cell {
+    width: 100px;
+    height: 100px;
+    position: relative;
+    animation: mymove 15s infinite;
+    animation-timing-function: linear;
+    animation-direction: alternate;
+}
+
+@keyframes mymove {
+    from {bottom: 100%;}
+    to {bottom: 0%;}
+}
+ 

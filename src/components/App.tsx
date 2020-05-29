@@ -2,14 +2,16 @@ import React from "react";
 import SignUp from "./SignUp";
 import Home from "./Home";
 import { connect, ConnectedProps } from "react-redux";
-import * as HomeActions from "../store/home/action";
+import * as HomeActions from "../store/router/action";
 import { bindActionCreators } from "redux";
 import { AppState } from "../store";
-import { HOME_NAVIGATION } from "../store/home/type";
+import SignIn from "./SignIn";
+import {Router, Route } from 'react-router-dom';
+import history from '../history';
 
 function mapStateToProps(state: AppState) {
   return {
-    homeState: state.home,
+    homeState: state.router,
   }
 }
 
@@ -27,20 +29,14 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 type Props = PropsFromRedux;
 
 function App(props: Props) {
-
-  const getNavigation = () => {
-    if (props.homeState.navigation === HOME_NAVIGATION.Home) {
-      return <Home />;
-    } else if (props.homeState.navigation === HOME_NAVIGATION.SignUp) {
-      return <SignUp />;
-    }
-    return null;
-  }
-
   return (
-    <div>
-      {getNavigation()}
-    </div>
+      <div>
+        <Router history = {history}>
+            <Route exact path="/" component={Home} />
+            <Route path="/SignUp" component={SignUp} />;
+            <Route path="/SignIn" component={SignIn} />;
+        </Router>
+      </div>
   );
 }
 

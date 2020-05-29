@@ -10,13 +10,9 @@ export function groundReducer(
 ): TYPE.groundState {
   switch (action.type) {
     case TYPE.DREAM_RECEIVED: {
-      return { ...state, dreams: action.dreams };
-    }
-    case TYPE.DREAM_ADDED: {
-      return { ...state, dreams: [...state.dreams, action.dream] };
+      return { ...state, dreams: action.payload };
     }
     default:
       return state;
   }
 }
-

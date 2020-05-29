@@ -1,13 +1,13 @@
 import * as TYPE from "./type";
 
-const initialState: TYPE.homeState = {
+const initialState: TYPE.routerState = {
   navigation: TYPE.HOME_NAVIGATION.Home,
 };
 
-export function homeReducer(
+export function routerReducer(
   state = initialState,
   action: TYPE.ACTION_TYPE
-): TYPE.homeState {
+): TYPE.routerState {
   switch (action.type) {
     case TYPE.SET_HOME_NAVIGATION: {
       return { ...state, navigation: action.navigation };

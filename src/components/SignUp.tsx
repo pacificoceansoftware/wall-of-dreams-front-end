@@ -14,14 +14,17 @@ import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { connect, ConnectedProps } from 'react-redux';
 import { bindActionCreators } from 'redux';
-import {SaveUserAction} from "../store/user/action";
+import { SaveUserAction } from "../store/user/action";
+import { SetHomeNavigation } from "../store/router/action";
+import { HOME_NAVIGATION } from '../store/router/type';
+import { AppState } from '../store';
 
 function Copyright() {
   return (
     <Typography variant="body2" color="textSecondary" align="center">
       {'Copyright © '}
-      <Link color="inherit" href="https://material-ui.com/">
-        Your Website
+      <Link color="inherit" href="https://wallofdeams.com/">
+        Wallofdreams.com
       </Link>{' '}
       {new Date().getFullYear()}
       {'.'}
@@ -49,15 +52,20 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
+function mapStateToProps(state: AppState) {
+  return {
+    dream: state.user.dream,
+  }
+}
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators(
-    {SaveUserAction},
+    { SaveUserAction, SetHomeNavigation },
     dispatch,
   )
 }
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
@@ -73,9 +81,10 @@ function SignUp(props: Props) {
   }
 
   const submitUser = (event: any) => {
-    props.SaveUserAction(clientInfo.firstName, clientInfo.lastName, clientInfo.emailAddress, clientInfo.password);
+    props.SaveUserAction(clientInfo.firstName, clientInfo.lastName,
+      clientInfo.emailAddress, clientInfo.password, props.dream);
   }
-  
+
   const firstNameOnChange = (event: any) => {
     clientInfo.firstName = event.target.value;
   }
@@ -90,6 +99,10 @@ function SignUp(props: Props) {
 
   const passWordOnChange = (event: any) => {
     clientInfo.password = event.target.value;
+  }
+
+  const signIn = (event: any) => {
+    props.SetHomeNavigation(HOME_NAVIGATION.SignIn);
   }
 
   return (
@@ -114,7 +127,7 @@ function SignUp(props: Props) {
                 id="firstName"
                 label="First Name"
                 autoFocus
-                onChange = {firstNameOnChange}
+                onChange={firstNameOnChange}
               >
               </TextField>
             </Grid>
@@ -127,9 +140,9 @@ function SignUp(props: Props) {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
-                onChange = {lastNameOnChange}
+                onChange={lastNameOnChange}
               >
-                
+
               </TextField>
             </Grid>
             <Grid item xs={12}>
@@ -141,7 +154,7 @@ function SignUp(props: Props) {
                 label="Email Address"
                 name="email"
                 autoComplete="email"
-                onChange= {emailAddressOnChange}
+                onChange={emailAddressOnChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -154,7 +167,7 @@ function SignUp(props: Props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
-                onChange= {passWordOnChange}
+                onChange={passWordOnChange}
               />
             </Grid>
             <Grid item xs={12}>
@@ -165,18 +178,20 @@ function SignUp(props: Props) {
             </Grid>
           </Grid>
           <Button
-            type="submit"
+            type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick = {submitUser}
+            onClick={submitUser}
           >
             Sign Up
           </Button>
           <Grid container justify="flex-end">
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2"
+                onClick={signIn}
+              >
                 Already have an account? Sign in
               </Link>
             </Grid>

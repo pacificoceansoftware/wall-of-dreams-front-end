@@ -8,12 +8,12 @@ export function GetDreamsAction() {
     });
 
     axios
-      .get("https://wall-of-dreams-back-end.herokuapp.com/api/dream")
+      .get("http://localhost:5000/api/user/dreams")
       .then(({ data }) => {
-        const result = data.map((element: any) => element.dream);
+        const result = data.map((element: any) => element.dreams);
         dispatch({
           type: TYPE.DREAM_RECEIVED,
-          dreams: result,
+          payload: result,
         });
       })
       .catch((error) =>
@@ -25,29 +25,3 @@ export function GetDreamsAction() {
   };
 }
 
-export function SaveDreamAction(dream: string) {
-  return function (dispatch: any) {
-    dispatch({
-      type: TYPE.ADD_DREAM_REQUESTED,
-    });
-
-    const newDream = {
-      dream: dream,
-    };
-
-    axios
-      .post("https://wall-of-dreams-back-end.herokuapp.com/api/dream/add", newDream)
-      .then(() => {
-        dispatch({
-          type: TYPE.DREAM_ADDED,
-          dream: dream,
-        });
-      })
-      .catch((error) =>
-        dispatch({
-          type: TYPE.ADD_DREAM_FAILED,
-          payload: error,
-        })
-      );
-  };
-}

@@ -1,12 +1,14 @@
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunkMiddleware from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-import {homeReducer} from "./home/reducer";
 import { groundReducer } from "./ground/reducer";
+import { userReducer } from "./user/reducer";
+import { routerReducer } from "./router/reducer";
 
 const rootReducer = combineReducers({
-  home: homeReducer,
+  router: routerReducer,
   ground: groundReducer,
+  user: userReducer,
 });
 
 export type AppState = ReturnType<typeof rootReducer>;

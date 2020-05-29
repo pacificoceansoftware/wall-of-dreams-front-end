@@ -1,8 +1,9 @@
 export enum HOME_NAVIGATION {
-    Home,
-    SignUp,
+    Home = "/",
+    SignUp = "/SignUp",
+    SignIn = "/SignIn",
 }
-export interface homeState {
+export interface routerState {
     navigation: HOME_NAVIGATION,
 }
 

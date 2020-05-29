@@ -12,6 +12,12 @@ import LockOutlinedIcon from '@material-ui/icons/LockOutlined';
 import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
+import { ConnectedProps, connect } from 'react-redux';
+import {SetHomeNavigation} from "../store/router/action";
+import { bindActionCreators } from 'redux';
+import {GetUserAction} from '../store/user/action';
+import { AppState } from '../store';
+import { HOME_NAVIGATION } from '../store/router/type';
 
 function Copyright() {
   return (
@@ -46,8 +52,46 @@ const useStyles = makeStyles((theme) => ({
   },
 }));
 
-export default function SignIn() {
+
+function mapStateToProps(state: AppState) {
+  return {
+    user: state.user,
+  }
+}
+
+function mapDispatchToProps(dispatch: any) {
+  return bindActionCreators(
+    {SetHomeNavigation, GetUserAction},
+    dispatch,
+  )
+}
+
+const connector = connect(mapStateToProps, mapDispatchToProps);
+
+type PropsFromRedux = ConnectedProps<typeof connector>
+
+type Props = PropsFromRedux;
+
+function SignIn(props: Props) {
   const classes = useStyles();
+  let password = "";
+  let email = props.user.emailAddress;
+
+  const signUp = (event: any) => {
+    props.SetHomeNavigation(HOME_NAVIGATION.SignUp);
+  }
+
+  const submit = (event: any) => {
+    props.GetUserAction(email, password);
+  }
+
+  const onChangePassword = (event: any) => {
+    password = event.target.value;
+  }
+
+  const onChangeEmail = (event: any) => {
+    email = event.target.value;
+  }
 
   return (
     <Container component="main" maxWidth="xs">
@@ -70,7 +114,10 @@ export default function SignIn() {
             name="email"
             autoComplete="email"
             autoFocus
-          />
+            onChange = {onChangeEmail}
+          >
+            {props.user.emailAddress}
+          </TextField>
           <TextField
             variant="outlined"
             margin="normal"
@@ -81,17 +128,19 @@ export default function SignIn() {
             type="password"
             id="password"
             autoComplete="current-password"
+            onChange = {onChangePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
             label="Remember me"
           />
           <Button
-            type="submit"
+            type="button"
             fullWidth
             variant="contained"
             color="primary"
             className={classes.submit}
+            onClick = {submit}
           >
             Sign In
           </Button>
@@ -102,7 +151,9 @@ export default function SignIn() {
               </Link>
             </Grid>
             <Grid item>
-              <Link href="#" variant="body2">
+              <Link href="#" variant="body2"
+              onClick = {signUp}
+              >
                 {"Don't have an account? Sign Up"}
               </Link>
             </Grid>
@@ -115,3 +166,5 @@ export default function SignIn() {
     </Container>
   );
 }
+
+export default connector(SignIn);

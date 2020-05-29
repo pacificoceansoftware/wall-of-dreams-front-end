@@ -5,14 +5,16 @@ import Button from '@material-ui/core/Button';
 import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { connect, ConnectedProps } from "react-redux";
 import { bindActionCreators } from "redux";
-import { SetHomeNavigation } from "../store/home/action";
-import { HOME_NAVIGATION } from "../store/home/type";
+import { SetHomeNavigation } from "../store/router/action";
+import { HOME_NAVIGATION } from "../store/router/type";
+import { AppState } from "../store";
+import Avatar from "@material-ui/core/Avatar";
 
 const useStyles = makeStyles(() =>
   createStyles({
     root: {
       width: "100%",
-      height: "100%",            
+      height: "100%",
       position: "relative",
     },
     joinButton: {
@@ -20,9 +22,24 @@ const useStyles = makeStyles(() =>
       zIndex: 1,
       position: "absolute",
       marginRight: 20,
+      top: 0,
+    },
+    joinCard: {
+      right: 0,
+      zIndex: 1,
+      position: "absolute",
+      marginRight: 20,
+      top: 0,
     },
   }),
 );
+
+function mapStateToProps(state: AppState) {
+  return {
+    userState: state.user,
+  }
+}
+
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators(
@@ -31,7 +48,7 @@ function mapDispatchToProps(dispatch: any) {
   )
 }
 
-const connector = connect(null, mapDispatchToProps);
+const connector = connect(mapStateToProps, mapDispatchToProps);
 
 type PropsFromRedux = ConnectedProps<typeof connector>
 
@@ -41,16 +58,28 @@ function Home(props: Props) {
   const classes = useStyles();
 
   const joinButtonClick = (event: any) => {
-    props.SetHomeNavigation(HOME_NAVIGATION.SignUp);
+    props.SetHomeNavigation(HOME_NAVIGATION.SignIn);
+  }
+
+  const getJoinState = () => {
+    if (props.userState.isJoin) {
+      return (
+      <Avatar className={classes.joinCard}>OP</Avatar>
+      );
+    } else {
+      return (
+        <Button className={classes.joinButton} variant="contained" color="primary" onClick={joinButtonClick} >
+          Join
+        </Button>
+      );
+    }
   }
 
   return (
     <div className={classes.root}>
       <Ground />
       <Asking></Asking>
-      <Button className={classes.joinButton} variant="contained" color="primary" onClick = {joinButtonClick} >
-        Join
-      </Button>
+      {getJoinState()}
     </div>
   );
 }
