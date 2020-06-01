@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -13,11 +13,11 @@ import Typography from '@material-ui/core/Typography';
 import { makeStyles } from '@material-ui/core/styles';
 import Container from '@material-ui/core/Container';
 import { ConnectedProps, connect } from 'react-redux';
-import {SetHomeNavigation} from "../store/router/action";
+import { SetSignState } from "../store/home/action";
 import { bindActionCreators } from 'redux';
-import {GetUserAction} from '../store/user/action';
+import { GetUserAction } from '../store/user/action';
 import { AppState } from '../store';
-import { HOME_NAVIGATION } from '../store/router/type';
+import { SIGN_STATE } from '../store/home/type';
 
 function Copyright() {
   return (
@@ -61,7 +61,7 @@ function mapStateToProps(state: AppState) {
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators(
-    {SetHomeNavigation, GetUserAction},
+    { SetSignState, GetUserAction },
     dispatch,
   )
 }
@@ -74,23 +74,34 @@ type Props = PropsFromRedux;
 
 function SignIn(props: Props) {
   const classes = useStyles();
-  let password = "";
-  let email = props.user.emailAddress;
+
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [emailError, setEmailError] = useState("");
+
 
   const signUp = (event: any) => {
-    props.SetHomeNavigation(HOME_NAVIGATION.SignUp);
+    props.SetSignState(SIGN_STATE.SIGN_UP);
+  }
+
+  function validation() {
+    if (email === "") {
+      setEmailError("Invalid email");
+      setTimeout(setEmailError, 5000, "");
+    }
   }
 
   const submit = (event: any) => {
+    validation();
     props.GetUserAction(email, password);
   }
 
   const onChangePassword = (event: any) => {
-    password = event.target.value;
+    setPassword(event.target.value);
   }
 
   const onChangeEmail = (event: any) => {
-    email = event.target.value;
+    setEmail(event.target.value);
   }
 
   return (
@@ -105,6 +116,8 @@ function SignIn(props: Props) {
         </Typography>
         <form className={classes.form} noValidate>
           <TextField
+            error={emailError !== ''}
+            helperText={emailError !== '' ? emailError : ''}
             variant="outlined"
             margin="normal"
             required
@@ -114,7 +127,7 @@ function SignIn(props: Props) {
             name="email"
             autoComplete="email"
             autoFocus
-            onChange = {onChangeEmail}
+            onChange={onChangeEmail}
           >
             {props.user.emailAddress}
           </TextField>
@@ -128,7 +141,7 @@ function SignIn(props: Props) {
             type="password"
             id="password"
             autoComplete="current-password"
-            onChange = {onChangePassword}
+            onChange={onChangePassword}
           />
           <FormControlLabel
             control={<Checkbox value="remember" color="primary" />}
@@ -140,7 +153,7 @@ function SignIn(props: Props) {
             variant="contained"
             color="primary"
             className={classes.submit}
-            onClick = {submit}
+            onClick={submit}
           >
             Sign In
           </Button>
@@ -152,7 +165,7 @@ function SignIn(props: Props) {
             </Grid>
             <Grid item>
               <Link href="#" variant="body2"
-              onClick = {signUp}
+                onClick={signUp}
               >
                 {"Don't have an account? Sign Up"}
               </Link>

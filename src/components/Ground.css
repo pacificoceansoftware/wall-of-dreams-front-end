@@ -8,7 +8,7 @@
 }
 
 @keyframes mymove {
-    from {bottom: 100%;}
+    from {bottom: 80%;}
     to {bottom: 0%;}
 }
  

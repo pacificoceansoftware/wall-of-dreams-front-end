@@ -5,17 +5,13 @@ const initialState: TYPE.UserState = {
   lastName: "",
   emailAddress: "",
   dream: "",
+  password: "",
   isJoin: false,
 };
 
 export function userReducer(state = initialState, action: any): TYPE.UserState {
   switch (action.type) {
-    case TYPE.SAVE_USER_FAIL: {
-      console.log("Save Fail" + action.payload);
-      return state;
-    }
     case TYPE.SAVED_USER: {
-      console.log("Added User");
       return {
         ...state,
         firstName: action.firstName,
@@ -24,18 +20,27 @@ export function userReducer(state = initialState, action: any): TYPE.UserState {
       };
     }
     case TYPE.GOT_USER: {
-      console.log("Login Successfully");
-      return state;
-    }
-    case TYPE.GET_USER_FAIL: {
-      console.log("Login Fail" + action.payload);
-      return state;
+      return {...state,
+      emailAddress: action.payload,
+      };
     }
     case TYPE.SET_JOIN: {
       return { ...state, isJoin: action.payload };
     }
     case TYPE.SET_DREAM: {
       return {...state, dream: action.payload};
+    }
+    case TYPE.SET_FIRST_NAME: {
+      return {...state, firstName: action.payload};
+    }
+    case TYPE.SET_LAST_NAME: {
+      return {...state, lastName: action.payload};
+    }
+    case TYPE.SET_EMAIL_ADDRESS: {
+      return {...state, emailAddress: action.payload};
+    }
+    case TYPE.SET_PASSWORD:{
+      return {...state, password: action.payload};
     }
     default:
       return state;

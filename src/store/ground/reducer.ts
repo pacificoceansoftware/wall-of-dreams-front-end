@@ -12,7 +12,18 @@ export function groundReducer(
     case TYPE.DREAM_RECEIVED: {
       return { ...state, dreams: action.payload };
     }
+    case TYPE.ADD_DREAM: {
+      return addDream(state, action.payload);
+    }
     default:
       return state;
   }
+}
+
+function addDream(state: TYPE.groundState, dream: string){
+  let input: string[] = [];
+  input.push(dream);
+  let dreams = state.dreams;
+  dreams.push(input);
+  return {...state, dreams: dreams}
 }

@@ -1,11 +1,9 @@
 import React from "react";
-import SignUp from "./SignUp";
 import Home from "./Home";
 import { connect, ConnectedProps } from "react-redux";
 import * as HomeActions from "../store/router/action";
 import { bindActionCreators } from "redux";
 import { AppState } from "../store";
-import SignIn from "./SignIn";
 import {Router, Route } from 'react-router-dom';
 import history from '../history';
 
@@ -33,8 +31,6 @@ function App(props: Props) {
       <div>
         <Router history = {history}>
             <Route exact path="/" component={Home} />
-            <Route path="/SignUp" component={SignUp} />;
-            <Route path="/SignIn" component={SignIn} />;
         </Router>
       </div>
   );

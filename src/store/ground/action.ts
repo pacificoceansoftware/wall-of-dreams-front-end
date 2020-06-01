@@ -24,3 +24,10 @@ export function GetDreamsAction() {
   };
 }
 
+export function AddDream(dream: string) {
+  return {
+    type: TYPE.ADD_DREAM,
+    payload: dream,
+  }
+}
+

@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import Avatar from '@material-ui/core/Avatar';
 import Button from '@material-ui/core/Button';
 import CssBaseline from '@material-ui/core/CssBaseline';
@@ -15,9 +15,10 @@ import Container from '@material-ui/core/Container';
 import { connect, ConnectedProps } from 'react-redux';
 import { bindActionCreators } from 'redux';
 import { SaveUserAction } from "../store/user/action";
-import { SetHomeNavigation } from "../store/router/action";
-import { HOME_NAVIGATION } from '../store/router/type';
 import { AppState } from '../store';
+import { SIGN_STATE } from '../store/home/type';
+import { SetSignState } from "../store/home/action";
+import * as UserAction from "../store/user/action";
 
 function Copyright() {
   return (
@@ -54,13 +55,14 @@ const useStyles = makeStyles((theme) => ({
 
 function mapStateToProps(state: AppState) {
   return {
-    dream: state.user.dream,
+    userState: state.user,
+    signUpState: state.signUp,
   }
 }
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators(
-    { SaveUserAction, SetHomeNavigation },
+    { ...UserAction, SaveUserAction, SetSignState },
     dispatch,
   )
 }
@@ -73,36 +75,59 @@ type Props = PropsFromRedux;
 
 function SignUp(props: Props) {
   const classes = useStyles();
-  let clientInfo = {
-    firstName: "",
-    lastName: "",
-    emailAddress: "",
-    password: "",
-  }
+
+  const [firstNameError, setFirstNameError] = useState("");
+  const [lastNameError, setLastNameError] = useState("");
+  const [emailError, setEmailError] = useState("");
+  const [passwordError, setPasswordError] = useState("");
 
   const submitUser = (event: any) => {
-    props.SaveUserAction(clientInfo.firstName, clientInfo.lastName,
-      clientInfo.emailAddress, clientInfo.password, props.dream);
+    validation();
+    props.SaveUserAction(props.userState.firstName, props.userState.lastName,
+      props.userState.emailAddress, props.userState.password, props.userState.dream);
+
   }
 
   const firstNameOnChange = (event: any) => {
-    clientInfo.firstName = event.target.value;
+    props.SetFirstName(event.target.value);
   }
 
   const lastNameOnChange = (event: any) => {
-    clientInfo.lastName = event.target.value;
+    props.SetLastName(event.target.value);
   }
 
   const emailAddressOnChange = (event: any) => {
-    clientInfo.emailAddress = event.target.value;
+    props.SetEmailAddress(event.target.value);
   }
 
   const passWordOnChange = (event: any) => {
-    clientInfo.password = event.target.value;
+    props.SetPassword(event.target.value);
   }
 
   const signIn = (event: any) => {
-    props.SetHomeNavigation(HOME_NAVIGATION.SignIn);
+    props.SetSignState(SIGN_STATE.SIGN_IN);
+  }
+
+  const validation = () => {
+    if (props.userState.firstName === "") {
+      setFirstNameError("please fill your first name");
+      setTimeout(setFirstNameError, 5000, "");
+    }
+    if (props.userState.lastName === "") {
+      setLastNameError("please fill your last name");
+      setTimeout(setLastNameError, 5000, "");
+    }
+    if (props.signUpState.emailAddressError !== "") {
+      setEmailError(props.signUpState.emailAddressError);
+      setTimeout(setEmailError, 5000, "");
+    } else if (props.userState.emailAddress === "") {
+      setEmailError("email can not be empty");
+      setTimeout(setEmailError, 5000, "");
+    }
+    if (props.signUpState.passwordError !== "") {
+      setPasswordError(props.signUpState.emailAddressError);
+      setTimeout(setPasswordError, 5000, "");
+    }
   }
 
   return (
@@ -127,6 +152,8 @@ function SignUp(props: Props) {
                 id="firstName"
                 label="First Name"
                 autoFocus
+                error={firstNameError !== ''}
+                helperText={firstNameError !== '' ? firstNameError : ''}
                 onChange={firstNameOnChange}
               >
               </TextField>
@@ -140,6 +167,8 @@ function SignUp(props: Props) {
                 label="Last Name"
                 name="lastName"
                 autoComplete="lname"
+                error={lastNameError !== ''}
+                helperText={lastNameError !== '' ? lastNameError : ''}
                 onChange={lastNameOnChange}
               >
 
@@ -155,6 +184,8 @@ function SignUp(props: Props) {
                 name="email"
                 autoComplete="email"
                 onChange={emailAddressOnChange}
+                error={emailError !== ''}
+                helperText={emailError !== '' ? emailError : ''}
               />
             </Grid>
             <Grid item xs={12}>
@@ -167,6 +198,8 @@ function SignUp(props: Props) {
                 type="password"
                 id="password"
                 autoComplete="current-password"
+                error={passwordError !== ''}
+                helperText={passwordError !== '' ? passwordError : ''}
                 onChange={passWordOnChange}
               />
             </Grid>

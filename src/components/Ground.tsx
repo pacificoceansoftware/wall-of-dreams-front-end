@@ -55,6 +55,7 @@ function Ground(props: Props) {
     let dreams = props.ground.dreams;
     dreams.forEach(element => {
       element.forEach(subElement => {
+        if (subElement !== '') {
           items.push(
             <Grid item xs={2}
               className="cell"
@@ -64,30 +65,31 @@ function Ground(props: Props) {
                 className={classes.paper}>{subElement}</Paper>
             </Grid>
           );
-      })
-    });
-
-    return (
-      <React.Fragment>
-        {items}
-      </React.Fragment>
-    );
-  }
-
-  useEffect(() => {
-    props.GetDreamsAction();
-  }, [])
+        }
+    })
+  });
 
   return (
-    <div className={classes.root}
-    >
-      <Grid container spacing={1}>
-        <Grid container item xs={12} spacing={2}>
-          <FormRow />
-        </Grid>
-      </Grid>
-    </div>
+    <React.Fragment>
+      {items}
+    </React.Fragment>
   );
+}
+
+useEffect(() => {
+  props.GetDreamsAction();
+}, [])
+
+return (
+  <div className={classes.root}
+  >
+    <Grid container spacing={1}>
+      <Grid container item xs={12} spacing={2}>
+        <FormRow />
+      </Grid>
+    </Grid>
+  </div>
+);
 }
 
 export default connector(Ground);

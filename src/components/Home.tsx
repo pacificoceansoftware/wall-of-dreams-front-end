@@ -6,9 +6,14 @@ import { makeStyles, createStyles } from '@material-ui/core/styles';
 import { connect, ConnectedProps } from "react-redux";
 import { bindActionCreators } from "redux";
 import { SetHomeNavigation } from "../store/router/action";
-import { HOME_NAVIGATION } from "../store/router/type";
 import { AppState } from "../store";
 import Avatar from "@material-ui/core/Avatar";
+import Popover from "@material-ui/core/Popover";
+import SignIn from "./SignIn";
+import SignUp from "./SignUp";
+import { SIGN_STATE } from "../store/home/type";
+import Profile from "./Profile";
+import * as HomeAction from "../store/home/action";
 
 const useStyles = makeStyles(() =>
   createStyles({
@@ -37,13 +42,14 @@ const useStyles = makeStyles(() =>
 function mapStateToProps(state: AppState) {
   return {
     userState: state.user,
+    homeState: state.home,
   }
 }
 
 
 function mapDispatchToProps(dispatch: any) {
   return bindActionCreators(
-    { SetHomeNavigation },
+    { ...HomeAction, SetHomeNavigation },
     dispatch,
   )
 }
@@ -57,22 +63,41 @@ type Props = PropsFromRedux;
 function Home(props: Props) {
   const classes = useStyles();
 
-  const joinButtonClick = (event: any) => {
-    props.SetHomeNavigation(HOME_NAVIGATION.SignIn);
-  }
-
   const getJoinState = () => {
     if (props.userState.isJoin) {
       return (
-      <Avatar className={classes.joinCard}>OP</Avatar>
+        <Avatar 
+        className={classes.joinCard} 
+        onClick = {handleClick} >OP</Avatar>
       );
     } else {
       return (
-        <Button className={classes.joinButton} variant="contained" color="primary" onClick={joinButtonClick} >
+        <Button className={classes.joinButton} variant="contained" color="primary" onClick={handleClick} >
           Join
         </Button>
       );
     }
+  }
+
+  const handleClick = (event: any) => {
+    props.SetAnchorElement(event.currentTarget);
+  };
+
+  const handleClose = () => {
+    props.SetAnchorElement(null);
+  };
+
+  const open = Boolean(props.homeState.anchorEl);
+
+  const getSign = () => {
+    if (props.homeState.signState === SIGN_STATE.SIGN_IN) {
+      return <SignIn></SignIn>;
+    } else if (props.homeState.signState === SIGN_STATE.SIGN_UP) {
+      return <SignUp></SignUp>;
+    } else if(props.homeState.signState === SIGN_STATE.PROFILE){
+      return <Profile></Profile>
+    }
+    return null;
   }
 
   return (
@@ -80,6 +105,22 @@ function Home(props: Props) {
       <Ground />
       <Asking></Asking>
       {getJoinState()}
+      <Popover
+        id={"simple-popover"}
+        open={open}
+        anchorEl={props.homeState.anchorEl}
+        onClose={handleClose}
+        anchorOrigin={{
+          vertical: 'bottom',
+          horizontal: 'center',
+        }}
+        transformOrigin={{
+          vertical: 'top',
+          horizontal: 'center',
+        }}
+      >
+        {getSign()}
+      </Popover>
     </div>
   );
 }
